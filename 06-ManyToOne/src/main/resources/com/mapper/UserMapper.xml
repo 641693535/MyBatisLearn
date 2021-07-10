@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapper.UserMapper">
+
+    <!--按照结果嵌套处理-->
+    <select id="getAllData" resultMap="getUser">
+        select s.id sid,s.name sname,t.id tid,t.name tname
+        from student s,teacher t
+        where s.tid = t.id
+    </select>
+    <resultMap id="getUser" type="User">
+        <result property="id" column="sid"/>
+        <result property="name" column="sname"/>
+        <association property="teacher" javaType="Teacher">
+            <result property="id" column="tid"/>
+            <result property="name" column="tname"/>
+        </association>
+    </resultMap>
+
+    <!--==========================================-->
+
+    <!--通过子查询方式！-->
+<!--    <resultMap id="UserMap" type="User">-->
+<!--        <result property="id" column="id"/>-->
+<!--        <result property="name" column="name"/>-->
+<!--        <association property="teacher" column="tid" javaType="Teacher" select="getTeacher"/>-->
+<!--    </resultMap>-->
+
+<!--    <select id="getAllData" resultMap="UserMap">-->
+<!--        select * from student;-->
+<!--    </select>-->
+
+<!--    <select id="getTeacher" resultType="Teacher">-->
+<!--        select * from teacher where id=#{tid};-->
+<!--    </select>-->
+
+</mapper>

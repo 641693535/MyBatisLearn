@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.BlogMapper">
+
+    <insert id="addData" parameterType="blog">
+        insert into blog (id,title,author,create_time,views)
+        values (#{id},#{title},#{author},#{createTime},#{views});
+    </insert>
+    <!--使用where ！自动删除Where或者添加where\And-->
+    <select id="getDataIf" parameterType="map" resultType="com.pojo.Blog">
+        select * from mybatis.blog
+        <where>
+            <if test="title != null">
+                and title=#{title}
+            </if>
+            <if test="author != null">
+                and author=#{author}
+            </if>
+        </where>
+    </select>
+    <!--使用if-->
+<!--    <select id="getDataIf" parameterType="map" resultType="com.pojo.Blog">-->
+<!--        select * from mybatis.blog where 1=1-->
+<!--        <if test="title != null">-->
+<!--            and title=#{title}-->
+<!--        </if>-->
+<!--        <if test="author != null">-->
+<!--            and author=#{author}-->
+<!--        </if>-->
+
+<!--    </select>-->
+    <!--使用where+choose-->
+    <select id="getDataChoose" parameterType="map" resultType="blog">
+        select * from blog
+        <where>
+            <choose>
+                <when test="title != null">
+                    and title = #{title}
+                </when>
+                <when test="author != null">
+                    and author = #{author}
+                </when>
+                <otherwise>
+                    and views = #{views}
+                </otherwise>
+            </choose>
+        </where>
+    </select>
+
+    <!--使用set 自动删除多余逗号-->
+    <update id="updateData" parameterType="map">
+        update mybatis.blog
+        <set>
+            <if test="id != null">
+                id = #{id}
+            </if>
+            <if test="author != null">
+                author = #{author}
+            </if>
+        </set>
+        where title = #{title}
+    </update>
+
+
+</mapper>
